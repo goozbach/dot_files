@@ -3,7 +3,8 @@ I have always wanted a simple way of managing my bash file settings (bashrc, bas
 
 This repo contains a slightly modified copy of what you would find in the default `/etc/skel` on a Fedora 11 system. But you actually only need the makefile
 
-You'll find some useful stuff in `_bashrc` and `_profile.d`
+Of my modifications you'll find the useful stuff in `_bashrc` and `_profile.d`.
+
 ## Instructions
 ### Creating source files
 Any file which matches the shell glob `_*` will be linked into `$HOME` as a symlink with the first `_`  replaced with a `.`
@@ -21,8 +22,8 @@ It's as simple as running:
 
     make
 
-From this directory.
+From this top-level directory.
 
-## requirements
+## Requirements
 * bash
 * gnu make
