@@ -3,7 +3,8 @@ I have always wanted a simple way of managing my bash file settings (bashrc, bas
 I had built a system much like this one, but it didn't work very well. So this is a ground-up rewrite
 
 ## instructions
-Any file which matches the shell glob `_*` will be linked into `$HOME`  
+Any file which matches the shell glob `_*`  
+will be linked into `$HOME`  
 as a symlink with the first `_`  replaced with a `.`
 
 For example:
