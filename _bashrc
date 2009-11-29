@@ -1,8 +1,33 @@
 # .bashrc
-
+echo "this is ~/.bashrc"
 # Source global definitions
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
+fi
+
+# source user definitions, only show output if $PS1 set
+# to add a new one, drop it in ~/.profile.d/
+if [ -d ~/.profile.d/ ]; then
+  # sourcing *.sh
+  for i in ~/.profile.d/*.sh ; do
+    if [ -r "$i" ]; then
+      if [ "$PS1" ]; then
+        . $i
+      else
+        . $i &>/dev/null
+      fi
+    fi
+  done
+  # sourcing *.bash
+  for i in ~/.profile.d/*.bash ; do
+    if [ -r "$i" ]; then
+      if [ "$PS1" ]; then
+        . $i
+      else
+        . $i &>/dev/null
+      fi
+    fi
+  done
 fi
 
 # User specific aliases and functions
