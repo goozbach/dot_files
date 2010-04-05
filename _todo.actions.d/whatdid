@@ -1,0 +1,61 @@
+#!/bin/bash
+action=$1
+shift
+#short circut on usage
+[ "$action" = "usage" ] && {
+  echo "  whatdid [--dates] [--last N]:"
+  echo "    Create a report of finished tasks, Project(if any) listed in front"
+  echo "    Supply the switch \"--dates\" to have the dates they finished printed"
+  echo "    Limit your search to the last \"N\" days by passing \"--last N\""
+  exit
+}
+
+#global varibles and defaults 
+DATES=false # by default we don't display dates
+LAST="0 1 2 3 4 5 6" # by default we want the last 6 days
+# option loop
+source $(dirname $0)/getoptsx.sh
+while getoptex "dates; last:" $@
+do
+  case $OPTOPT in
+    dates)
+      DATES=true
+    ;;
+    last)
+      LAST=$(seq 0 1 $OPTARG)
+    ;;
+  esac
+done
+shift $[OPTIND-1]
+
+# set the color to be used
+BrightBlue="\033[1;34m"
+Reset="\033[0;39m"
+
+# for this command we always want to disable verbosity
+TODOTXT_VERBOSE=0
+# strip out done tasks
+$TODO_SH -d $TODOTXT_CFG_FILE lsa | grep -E "[[:digit:]]* x (`for i in $LAST; do date -d "today -$i day" '+%Y-%m-%d' | tr '\n' '|'; done | sed -e 's/|$//'`)" | cut -d ' ' -f 3- | tr -s ' ' | while read eachline
+do
+  if [ $DATES == true ]
+  then
+    # print the dates if requested
+    echo $eachline | grep -E -o -w '[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2}' | tr '\n' ' '
+  fi
+  # start printing in blue for the topics
+  echo -en ${BrightBlue}
+  # print the projects
+  echo $eachline | grep -E -o -w '\+[^ ]+' | sed -e 's/\+/ /g' | sed -e 's/^./\u&/g' | tr '\n' ' ' | tr -s ' ' | sed -e 's/ \+\(.*\) \+$/\1/' | sed 's/\b\(.\)/\U\1/g' | tr ' ' '/'
+  # checking to see if there are any projects in the line
+  if [ $( echo $eachline | grep -E -o -w '\+[^ ]+' | sed -e 's/\+/ /g' | sed -e 's/^./\u&/g' | tr '\n' ' ' | tr -s ' ' | sed -e 's/ \+\(.*\) \+$/\1/' | sed 's/\b\(.\)/\U\1/g' | tr ' ' '/' | wc -c ) == 0 ]
+  then
+    # created the special "No_Category" for items without projects
+    echo -en "No_Category"
+  fi
+  # reset the display color
+  echo -en ${Reset}
+  # column delimiter
+  echo -en ",\t"
+  # reprint the line with the projects and dates removed
+  echo $eachline | sed -e 's/ +[^ ]\+//g' | sed -r -e 's/[[:digit:]]{4}-[[:digit:]]{2}-[[:digit:]]{2} //g'
+done

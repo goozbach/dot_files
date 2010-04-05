@@ -1,0 +1,116 @@
+set nocompatible
+set modeline
+set modelines=5
+set autoindent
+set bg=dark
+set hlsearch
+syntax enable
+syntax on
+
+set guioptions-=T       " Don't display the toolbar
+
+augroup xiphias
+  autocmd!
+  "au BufRead *.xml so /home/sjansen/.vim/maps_r3.vim
+  "au BufRead *.xml so /home/sjansen/.vim/import.vim
+  "au BufRead *.xml so /home/sjansen/.vim/make.vim
+  map <F12> vat<Esc>`<df>`>F<df>
+augroup END
+
+" move the current line up or down
+nmap <silent> <C-j> :m+<CR>
+nmap <silent> <C-k> :m-2<CR>
+imap <silent> <C-j> <C-O>:m+<CR><C-O>
+imap <silent> <C-k> <C-O>:m-2<CR><C-O>
+" move the selected block up or down
+vmap <silent> <C-j> :m'>+<CR>gv=gv
+vmap <silent> <C-k> :m'<-2<CR>gv=gv
+
+if has("gui_running")
+  set lines=60
+  if &diff
+    winpos 5 30
+    set columns=225
+  else
+    set columns=100
+    set title titlestring=GVim\ -\ %{$USER}@%{hostname()}:%<%F%(\ %m%r%h%)
+  endif
+  set guioptions+=c
+  set guifont=DejaVu\ Sans\ Mono\ 9
+  autocmd GUIEnter * colorscheme desert " ~lart SUSE
+else
+  set title titlestring=Vim\ -\ %{$USER}@%{hostname()}:%<%F%(\ %m%r%h%)
+endif
+
+if !exists("autocommands_loaded")
+  let autocommands_loaded = 1
+  autocmd BufNewFile   *.c     0r ~/.vim/skeleton.c
+  autocmd BufNewFile   *.pl    0r ~/.vim/skeleton.pl
+  autocmd BufNewFile   *.py    0r ~/.vim/skeleton.py
+  autocmd BufNewFile   *.css   0r ~/.vim/skeleton.css
+  autocmd BufNewFile   *.html  0r ~/.vim/skeleton.html
+  autocmd BufNewFile   *.xhtml 0r ~/.vim/skeleton.xhtml
+endif
+
+" Don't use Ex mode, use Q for formatting
+"map Q gq
+map Q <c-w>
+
+" Tab completion
+if has("insert_expand")
+  " InsertTabWrapper
+  " http://vim.sourceforge.net/tips/tip.php?tip_id=102
+  function! InsertTabWrapper(direction)
+    let col = col('.') - 1
+    if !col || getline('.')[col - 1] !~ '\k'
+      return "\<tab>"
+    elseif "backward" == a:direction
+  return "\<c-p>"
+    else
+      return "\<c-n>"
+    endif
+  endfunction
+
+  " Most of the time I'm repeating something I've previously
+  " typed, not something later in the file.
+  inoremap <tab> <c-r>=InsertTabWrapper ("backward")<cr>
+  inoremap <s-tab> <c-r>=InsertTabWrapper ("forward")<cr>
+endif "if has("insert_expand")
+
+" Transparent editing of gpg encrypted files.
+" By Wouter Hanegraaff <wouter@blub.net>
+augroup encrypted
+    au!
+
+    " First make sure nothing is written to ~/.viminfo while editing
+    " an encrypted file.
+    autocmd BufReadPre,FileReadPre      *.gpg set viminfo=
+    " We don't want a swap file, as it writes unencrypted data to disk
+    autocmd BufReadPre,FileReadPre      *.gpg set noswapfile
+    " Switch to binary mode to read the encrypted file
+    autocmd BufReadPre,FileReadPre      *.gpg set bin
+    autocmd BufReadPre,FileReadPre      *.gpg let ch_save = &ch|set ch=2
+    autocmd BufReadPre,FileReadPre      *.gpg let shsave=&sh
+    autocmd BufReadPre,FileReadPre      *.gpg let &sh='sh'
+    autocmd BufReadPre,FileReadPre      *.gpg let ch_save = &ch|set ch=2
+    autocmd BufReadPost,FileReadPost    *.gpg '[,']!gpg --decrypt --default-recipient-self 2> /dev/null
+    autocmd BufReadPost,FileReadPost    *.gpg let &sh=shsave
+
+    " Switch to normal mode for editing
+    autocmd BufReadPost,FileReadPost    *.gpg set nobin
+    autocmd BufReadPost,FileReadPost    *.gpg let &ch = ch_save|unlet ch_save
+    autocmd BufReadPost,FileReadPost    *.gpg execute ":doautocmd BufReadPost " . expand("%:r")
+
+    " Convert all text to encrypted text before writing
+    autocmd BufWritePre,FileWritePre    *.gpg set bin
+    autocmd BufWritePre,FileWritePre    *.gpg let shsave=&sh
+    autocmd BufWritePre,FileWritePre    *.gpg let &sh='sh'
+    autocmd BufWritePre,FileWritePre    *.gpg '[,']!gpg --encrypt --default-recipient-self 2>/dev/null
+    autocmd BufWritePre,FileWritePre    *.gpg let &sh=shsave
+
+    " Undo the encryption so we are back in the normal text, directly
+    " after the file has been written.
+    autocmd BufWritePost,FileWritePost  *.gpg   silent u
+    autocmd BufWritePost,FileWritePost  *.gpg set nobin
+augroup END
+filetype plugin indent on

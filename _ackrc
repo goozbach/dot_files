@@ -1,0 +1,2 @@
+#--type-set "markdown=.mark"
+--type-set=markdown=.mark,.md,.mmd
