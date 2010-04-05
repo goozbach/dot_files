@@ -1,0 +1,5 @@
+screen -t bazaar 0 
+screen -t bash-shell 1
+screen -t vi-editor 2
+screen -t bazlog 3
+screen -t bazlog 4

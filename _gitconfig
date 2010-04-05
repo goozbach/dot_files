@@ -1,0 +1,16 @@
+[core]
+	excludesfile = $HOME/.gitignore #don't know if this works
+	editor = /usr/bin/vim
+[merge]
+	tool = vimdiff
+[color]
+	status = auto
+	branch = auto
+	interactive = auto
+	diff = auto
+[alias]
+	co = checkout
+	br = branch
+	ci = commit
+	st = status
+	last = log -1 HEAD

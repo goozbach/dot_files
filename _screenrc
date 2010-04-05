@@ -1,0 +1,24 @@
+# terminfo and termcap for nice 256 color terminal
+# # allow bold colors - necessary for some reason
+#term screen-256color
+#attrcolor b ".I"
+# # tell screen how to set colors. AB = background, AF=foreground
+#termcapinfo xterm 'hs:ts=\E]2;:fs=\007:ds=\E]2;drock -- screen\007'
+# # erase background with current bg color
+#defbce "on" 
+
+### added
+# terminfo and termcap for nice 256 color terminal
+# allow bold colors - necessary for some reason
+attrcolor b ".I"
+term xterm
+# tell screen how to set colors. AB = background, AF=foreground
+termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E[38;5;%dm'
+# erase background with current bg color
+defbce "on" 
+
+#hardstatus alwayslastline
+#hardstatus string "%{bW}%h%= "
+
+#caption always "%{= Kw}%?%-Lw%?%{+b Bw}%n%f%t%?(%u)%?%{= Kw}%?%+Lw%?"
+

@@ -1,0 +1,16 @@
+config['installer'] = 'yum'
+
+config['files'] = {
+  '/etc/hosts': '''
+127.0.0.1 mach.friocorte.com mach
+''',
+  '/etc/resolv.conf': '''
+search friocorte.com friocorte.com
+nameserver 127.0.0.1
+nameserver 216.27.175.2
+nameserver 216.231.41.2
+'''
+}
+
+config['script-success'] = "mach-collect"
+

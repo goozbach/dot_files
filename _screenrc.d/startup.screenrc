@@ -1,0 +1,7 @@
+sessionname Main_Session
+source /home/dcarter/.screenrc
+screen -t Shell 
+screen -t Editor 
+screen -t Man
+screen -t Version
+

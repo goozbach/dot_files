@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# see if this is being executed
+echo this is the test script
+
+## global varibles
+echo "TODOTXT_PRESERVE_LINE_NUMBERS $TODOTXT_PRESERVE_LINE_NUMBERS"
+echo "TODOTXT_VERBOSE $TODOTXT_VERBOSE"
+echo "TODOTXT_PLAIN $TODOTXT_PLAIN"
+echo "TODOTXT_AUTO_ARCHIVE $TODOTXT_AUTO_ARCHIVE"
+echo "TODOTXT_FORCE $TODOTXT_FORCE"
+echo "TODOTXT_DATE_ON_ADD $TODOTXT_DATE_ON_ADD"
+echo "TODO_SH $TODO_SH"
+echo "TODOTXT_CFG_FILE $TODOTXT_CFG_FILE"
+
+
+## others from config file

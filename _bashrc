@@ -1,5 +1,4 @@
 # .bashrc
-echo "this is ~/.bashrc"
 # Source global definitions
 if [ -f /etc/bashrc ]; then
 	. /etc/bashrc
@@ -30,4 +29,16 @@ if [ -d ~/.profile.d/ ]; then
   done
 fi
 
+# source the user specific bash completion files
+if [ -d ~/.bash_completion.d/ ]; then
+  # sourcing .sh
+  for i in ~/.bash_completion.d/*.sh ; do
+    . $i
+  done
+fi
 # User specific aliases and functions
+
+EDITOR=/usr/bin/vim
+VISUAL=/usr/bin/gvim
+
+export EDITOR VISUAL
