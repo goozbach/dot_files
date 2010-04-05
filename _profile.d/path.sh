@@ -1,2 +1,2 @@
 # set the path
-PATH=$HOME/bin:$PATH
+PATH=$HOME/stowdir/bin:$PATH
