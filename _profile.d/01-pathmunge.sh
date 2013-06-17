@@ -15,13 +15,13 @@ if [ -z "$EUID" -a -x /usr/bin/id ]; then
 fi
 
 # Path manipulation
-if [ "$EUID" = "0" ]; then
-    pathmunge /sbin
-    pathmunge /usr/sbin
-    pathmunge /usr/local/sbin
-else
-    pathmunge /usr/local/sbin after
-    pathmunge /usr/sbin after
-    pathmunge /sbin after
-fi
-pathmunge /usr/local/lib/perl5/site_perl/5.10.0/auto/share/dist/Cope
+pathmunge /usr/local/sbin after
+pathmunge /usr/local/bin after
+pathmunge /usr/sbin after
+pathmunge /sbin after
+pathmunge ${HOME}/.cabal/bin after
+#pathmunge /usr/local/lib/perl5/site_perl/5.10.0/auto/share/dist/Cope
+pathmunge ${HOME}/stowdir/bin
+pathmunge /usr/local/opt/ruby/bin
+
+export PATH
